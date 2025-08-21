@@ -1,0 +1,22 @@
+# build output
+dist
+build
+
+# dependency folders
+node_modules
+
+# Angular specific
+coverage
+.angular
+
+# compiled assets
+*.js
+*.map
+
+# environment files 
+src/environments/*.ts
+
+# package lock files 
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

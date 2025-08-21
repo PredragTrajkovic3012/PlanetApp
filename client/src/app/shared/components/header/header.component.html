@@ -1,0 +1,21 @@
+<div class="flex justify-between items-center gap-2 md:h-[120px] h-[80px] bg-white w-full md:px-10 px-5">
+  <div class="font-inter font-bold md:text-[38px] text-lg leading-[40px] tracking-[0%]">Planets</div>
+  <div class="flex items-center gap-5 h-10">
+    <div
+      [class.bg-strangeSilver]="!(displayModeService.isTable | async)"
+      (click)="displayModeService.setIsTable()"
+      class="flex items-center justify-center w-10 h-10 rounded-sm cursor-pointer"
+    >
+      <mat-icon>grid_view</mat-icon>
+    </div>
+    <div
+      [class.bg-strangeSilver]="displayModeService.isTable | async"
+      (click)="displayModeService.setIsTable()"
+      class="flex items-center justify-center w-10 h-10 rounded-sm cursor-pointer"
+    >
+      <mat-icon>format_list_bulleted</mat-icon>
+    </div>
+
+    <button class="purple-button" type="button">New planet</button>
+  </div>
+</div>
