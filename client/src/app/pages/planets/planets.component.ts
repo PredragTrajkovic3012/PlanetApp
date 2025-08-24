@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { DisplayModeService } from '@shared/services/display-mode.service';
-import { PlanetService } from '@shared/services/planet.service';
+import { RouterOutlet } from '@angular/router';
+import { PlanetStore } from './planets.store';
 
 @Component({
   selector: 'app-planets',
@@ -11,18 +10,9 @@ import { PlanetService } from '@shared/services/planet.service';
   styleUrl: './planets.component.scss',
 })
 export class PlanetsComponent implements OnInit {
-  displayModeService = inject(DisplayModeService);
-  planetService = inject(PlanetService);
+  planetStore = inject(PlanetStore);
 
   ngOnInit(): void {
-    this.displayModeService.redirect();
-    this.planetService.getPlanets().subscribe({
-      next: (planets) => {
-        console.log('Planets loaded:', planets);
-      },
-      error: (error) => {
-        console.error('Error loading planets:', error);
-      },
-    });
+    this.planetStore.getPlanets({});
   }
 }

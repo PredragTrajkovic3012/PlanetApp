@@ -1,1 +1,16 @@
-<p>planets-grid works!</p>
+@defer {
+  <div class="grid md:grid-cols-4 grid-cols-1 gap-4 p-4 animate-fade-in">
+    @for (
+      planet of planetStore.filteredPlanets().length > 0 ? planetStore.filteredPlanets() : planetStore.planets();
+      track planet
+    ) {
+      <app-planet-card [planet]="planet"></app-planet-card>
+    } @empty {
+      <div class="col-span-4 text-center py-6 text-lg">Sorry no planets for now...</div>
+    }
+  </div>
+} @placeholder (minimum 500ms) {
+  <div class="flex w-full h-full items-center justify-center p-4 sm:p-0">
+    <app-loader></app-loader>
+  </div>
+}

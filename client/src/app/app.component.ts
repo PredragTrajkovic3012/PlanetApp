@@ -14,8 +14,8 @@ export class AppComponent implements OnInit {
   displayModeService = inject(DisplayModeService);
 
   ngOnInit(): void {
-    if(localStorage.getItem('displayMode')) {
-      this.displayModeService.isTable.next(localStorage.getItem('displayMode') === 'table');
+    if (localStorage.getItem('displayMode')) {
+      this.displayModeService.isTable$.next(localStorage.getItem('displayMode') === 'table');
     }
   }
 }

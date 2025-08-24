@@ -17,8 +17,85 @@ body {
   font-family: var(--font-inter);
 }
 .purple-button {
-  @apply bg-purple font-inter rounded-[4px] font-semibold text-[16px] leading-[20px] tracking-[0] text-center text-white px-4 py-2;
+  @apply bg-purple font-inter rounded-[4px] font-semibold text-[16px] leading-[20px] tracking-[0] text-center text-white px-4 py-2 transition ease-out duration-500 hover:bg-purple/80;
+}
+.edit-button {
+  @apply bg-strangeSilver min-w-[120px] font-inter rounded-[4px] font-semibold text-[16px] leading-[20px] tracking-[0] text-center text-easyBlue px-4 py-2 transition ease-out duration-500 hover:bg-strangeSilver/50;
+}
+.darkblue-button {
+  @apply bg-darkBlue font-inter min-w-[120px] rounded-[4px] font-semibold text-[16px] leading-[20px] tracking-[0] text-center text-white px-4 py-2 transition ease-out duration-500 hover:bg-darkBlue/80;
+}
+.display-button {
+  @apply flex items-center justify-center h-[28px] w-[28px] rounded-sm cursor-pointer transition-colors duration-300;
+}
+.cancel-button {
+  @apply w-[120px] h-[40px] bg-transparent rounded-[4px] px-[12px] py-[10px] opacity-100 gap-[10px] transition-all duration-200 ease-in-out hover:bg-gray-200 hover:shadow-sm;
+}
+.search-input {
+  @apply w-full h-full border border-[#BDBFBF] rounded-[4px] pr-3 pl-10 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.label-text {
+  @apply font-inter font-normal text-xs leading-5 tracking-normal text-grayBase;
+}
+
+.info-text {
+  @apply font-inter font-medium text-2xl leading-7 tracking-normal text-center text-text;
+}
+.sub-text {
+  @apply font-inter font-normal text-xs leading-5 tracking-normal text-center text-grayL80 whitespace-nowrap;
+}
+.sub-text-2 {
+  @apply font-inter font-normal text-xs leading-5 tracking-normal text-grayBase;
+}
+
+.zoom-in {
+  @apply transition-transform duration-300 ease-in-out hover:scale-[1.02];
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.smaller-icon {
+  transform: scale(0.8);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fadeIn 1s ease-in-out forwards;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.8);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.5) transparent;
+}

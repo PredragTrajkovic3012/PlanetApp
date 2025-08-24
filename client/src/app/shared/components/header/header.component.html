@@ -1,21 +1,49 @@
-<div class="flex justify-between items-center gap-2 md:h-[120px] h-[80px] bg-white w-full md:px-10 px-5">
-  <div class="font-inter font-bold md:text-[38px] text-lg leading-[40px] tracking-[0%]">Planets</div>
-  <div class="flex items-center gap-5 h-10">
-    <div
-      [class.bg-strangeSilver]="!(displayModeService.isTable | async)"
-      (click)="displayModeService.setIsTable()"
-      class="flex items-center justify-center w-10 h-10 rounded-sm cursor-pointer"
-    >
-      <mat-icon>grid_view</mat-icon>
-    </div>
-    <div
-      [class.bg-strangeSilver]="displayModeService.isTable | async"
-      (click)="displayModeService.setIsTable()"
-      class="flex items-center justify-center w-10 h-10 rounded-sm cursor-pointer"
-    >
-      <mat-icon>format_list_bulleted</mat-icon>
-    </div>
-
-    <button class="purple-button" type="button">New planet</button>
+<div class="flex justify-between items-center gap-2 md:h-[120px] h-[80px] bg-white w-full md:px-10 px-3">
+  <div
+    class="font-inter font-bold md:text-mammut text-lg leading-[40px] tracking-[0%] hover:text-black cursor-pointer"
+    [routerLink]="['/']"
+  >
+    Planets
   </div>
+  @if (!planetStore.overviewedPlanet()) {
+    <div class="flex items-center md:gap-5 gap-2 h-10">
+      <div class="flex items-center md:gap-2">
+        <div
+          (click)="toggle()"
+          class="display-button"
+          [ngClass]="(displayModeService.isTable$ | async) ? '' : 'bg-strangeSilver'"
+        >
+          <mat-icon class="smaller-icon">grid_view</mat-icon>
+        </div>
+        <div class="w-px h-6 bg-grayL80"></div>
+        <div
+          [ngClass]="(displayModeService.isTable$ | async) ? 'bg-strangeSilver' : ''"
+          (click)="toggle()"
+          class="display-button"
+        >
+          <mat-icon class="smaller-icon">format_list_bulleted</mat-icon>
+        </div>
+      </div>
+      <div class="md:max-w-[240px] max-w-[160px] md:w-[240px] h-[40px] relative">
+        <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">search</mat-icon>
+        <input
+          id="searchControl"
+          type="text"
+          [formControl]="searchControl"
+          type="text"
+          placeholder="Search..."
+          class="search-input"
+        />
+      </div>
+      <button class="purple-button md:inline hidden" type="button" (click)="openPlanetDialog()">New planet</button>
+      <button class="purple-button md:hidden inline h-8 w-8 flex text-center items-center justify-center" type="button">
+        +
+      </button>
+    </div>
+  } @else {
+    <div class="flex gap-2 justify-start items-center">
+      <button class="edit-button" type="button">Edit</button>
+      <button class="darkblue-button" type="button">Delete</button>
+    </div>
+  }
 </div>

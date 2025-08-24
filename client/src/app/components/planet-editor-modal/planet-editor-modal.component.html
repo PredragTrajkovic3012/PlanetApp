@@ -1,0 +1,159 @@
+<div
+  class="flex flex-col items-center gap-5 mx-auto p-6 bg-white rounded-lg shadow-md max-h-[90vh] overflow-auto"
+  [formGroup]="planetForm"
+>
+  <h2 class="font-inter font-semibold text-lg leading-7 tracking-normal self-start">New planet</h2>
+  <div class="flex flex-col w-full gap-2">
+    <div class="flex justify-between w-full items-center">
+      <label class="font-inter font-normal text-sm leading-5 tracking-normal">Photo</label>
+
+      <label
+        class="relative inline-block w-[87px] h-[28px] bg-grayBase text-white rounded-[4px] cursor-pointer overflow-hidden"
+      >
+        <span class="absolute inset-0 flex items-center justify-center px-[12px] py-[4px] cursor-pointer">
+          Browse...
+        </span>
+        <input
+          type="file"
+          accept=".png,.jpg,.jpeg"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          (change)="onFileSelect($event)"
+        />
+      </label>
+    </div>
+    @if (imageError) {
+      <div class="text-red-500 text-sm mt-1">{{ imageError }}</div>
+    }
+
+    @if (previewUrl) {
+      <div class="mt-2">
+        <img [src]="previewUrl" alt="Preview" class="max-h-20 max-w-20 h-20 w-20 rounded-full shadow" />
+      </div>
+    }
+  </div>
+
+  <!-- Name -->
+  <div class="flex flex-col w-full gap-1">
+    <label class="label-text">Name</label>
+    <input
+      type="text"
+      formControlName="planetName"
+      class="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+    @if (planetForm.get('planetName')?.touched && planetForm.get('planetName')?.invalid) {
+      <div class="text-red-500 text-sm">
+        @if (planetForm.get('planetName')?.errors?.['required']) {
+          <div>Name is required</div>
+        }
+        @if (planetForm.get('planetName')?.errors?.['minlength']) {
+          <div>Name must be at least 3 characters</div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Description -->
+  <div class="flex flex-col w-full gap-1">
+    <label class="label-text">Description</label>
+    <textarea
+      rows="3"
+      formControlName="description"
+      class="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+    ></textarea>
+    @if (planetForm.get('description')?.touched && planetForm.get('description')?.invalid) {
+      <div class="text-red-500 text-sm">Description is required</div>
+    }
+  </div>
+
+  <!-- Radius and Color -->
+  <div class="flex gap-4 mb-4">
+    <div class="flex-1">
+      <label class="label-text">Radius in km</label>
+      <input
+        type="text"
+        formControlName="planetRadiusKM"
+        class="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      @if (planetForm.get('planetRadiusKM')?.touched && planetForm.get('planetRadiusKM')?.invalid) {
+        <div class="text-red-500 text-sm">
+          @if (planetForm.get('planetRadiusKM')?.errors?.['required']) {
+            <div>Radius is required</div>
+          }
+          @if (planetForm.get('planetRadiusKM')?.errors?.['pattern']) {
+            <div>Must be a number</div>
+          }
+        </div>
+      }
+    </div>
+    <div class="flex-1">
+      <label class="label-text">Color</label>
+      <input
+        type="text"
+        formControlName="planetColor"
+        class="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      @if (planetForm.get('planetColor')?.touched && planetForm.get('planetColor')?.invalid) {
+        <div class="text-red-500 text-sm">Color is required</div>
+      }
+    </div>
+  </div>
+
+  <!-- Distances -->
+  <div class="flex gap-4 mb-6">
+    <div class="flex-1">
+      <label class="label-text">Dist. from Sun</label>
+      <input
+        type="text"
+        formControlName="distFromSun"
+        class="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      @if (planetForm.get('distFromSun')?.touched && planetForm.get('distFromSun')?.invalid) {
+        <div class="text-red-500 text-sm">
+          @if (planetForm.get('distFromSun')?.errors?.['required']) {
+            <div>Distance from Sun is required</div>
+          }
+          @if (planetForm.get('distFromSun')?.errors?.['pattern']) {
+            <div>Must be a number</div>
+          }
+        </div>
+      }
+    </div>
+    <div class="flex-1">
+      <label class="label-text">Dist. from Earth</label>
+      <input
+        type="text"
+        formControlName="distFromEarth"
+        class="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      @if (planetForm.get('distFromEarth')?.touched && planetForm.get('distFromEarth')?.invalid) {
+        <div class="text-red-500 text-sm">
+          @if (planetForm.get('distFromEarth')?.errors?.['required']) {
+            <div>Distance from Earth is required</div>
+          }
+          @if (planetForm.get('distFromEarth')?.errors?.['pattern']) {
+            <div>Must be a number</div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex justify-end gap-4">
+    <button
+      type="button"
+      class="darkblue-button disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="onSubmit()"
+      [disabled]="planetForm.invalid"
+    >
+      Create
+    </button>
+    <button
+      type="button"
+      class="cancel-button flex text-grayBase items-center justify-center text-center"
+      (click)="matDialogRef.close()"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

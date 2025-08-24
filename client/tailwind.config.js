@@ -18,6 +18,9 @@ module.exports = {
         inter: ['Inter', 'sans-serif'],
         nunito: ['Nunito', 'sans-serif'],
       },
+      fontSize: {
+        mammut: ['38px', { lineHeight: '56px', fontWeight: '700' }],
+      },
     },
   },
   plugins: [],
