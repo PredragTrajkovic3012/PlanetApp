@@ -95,6 +95,18 @@ body {
   background-color: rgba(100, 100, 100, 0.8);
 }
 
+.snackbar-success {
+  background-color: #4caf50 !important;
+  color: #fff !important;
+  font-weight: 500;
+}
+
+.snackbar-error {
+  background-color: #f44336 !important;
+  color: #fff !important;
+  font-weight: 500;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(100, 100, 100, 0.5) transparent;

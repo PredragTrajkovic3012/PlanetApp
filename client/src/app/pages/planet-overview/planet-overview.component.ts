@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PlanetStore } from '@pages/planets/planets.store';
 
@@ -7,6 +7,7 @@ import { PlanetStore } from '@pages/planets/planets.store';
   standalone: true,
   templateUrl: './planet-overview.component.html',
   styleUrl: './planet-overview.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanetOverviewComponent implements OnInit, OnDestroy {
   activatedRoute = inject(ActivatedRoute);

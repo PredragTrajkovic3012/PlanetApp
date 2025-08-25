@@ -2,7 +2,9 @@
   class="flex flex-col items-center gap-5 mx-auto p-6 bg-white rounded-lg shadow-md max-h-[90vh] overflow-auto"
   [formGroup]="planetForm"
 >
-  <h2 class="font-inter font-semibold text-lg leading-7 tracking-normal self-start">New planet</h2>
+  <h2 class="font-inter font-semibold text-lg leading-7 tracking-normal self-start">
+    {{ isEditMode ? 'Edit Planet' : 'New Planet' }}
+  </h2>
   <div class="flex flex-col w-full gap-2">
     <div class="flex justify-between w-full items-center">
       <label class="font-inter font-normal text-sm leading-5 tracking-normal">Photo</label>
@@ -146,7 +148,7 @@
       (click)="onSubmit()"
       [disabled]="planetForm.invalid"
     >
-      Create
+      {{ isEditMode ? 'Update' : 'Create' }}
     </button>
     <button
       type="button"

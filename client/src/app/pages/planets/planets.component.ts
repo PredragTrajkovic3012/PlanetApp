@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PlanetStore } from './planets.store';
 
@@ -8,6 +8,7 @@ import { PlanetStore } from './planets.store';
   imports: [RouterOutlet],
   templateUrl: './planets.component.html',
   styleUrl: './planets.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanetsComponent implements OnInit {
   planetStore = inject(PlanetStore);

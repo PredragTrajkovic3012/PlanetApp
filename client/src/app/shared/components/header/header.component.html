@@ -36,14 +36,19 @@
         />
       </div>
       <button class="purple-button md:inline hidden" type="button" (click)="openPlanetDialog()">New planet</button>
-      <button class="purple-button md:hidden inline h-8 w-8 flex text-center items-center justify-center" type="button">
+      <button
+        class="purple-button md:hidden inline h-8 w-8 flex text-center items-center justify-center"
+        type="button"
+        (click)="openPlanetDialog()"
+      >
         +
       </button>
     </div>
   } @else {
     <div class="flex gap-2 justify-start items-center">
-      <button class="edit-button" type="button">Edit</button>
-      <button class="darkblue-button" type="button">Delete</button>
+      <button class="edit-button" type="button" (click)="openPlanetDialog()">Edit</button>
+
+      <button class="darkblue-button" type="button" (click)="deletePlanet()">Delete</button>
     </div>
   }
 </div>

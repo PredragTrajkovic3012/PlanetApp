@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LoaderComponent } from '@shared/components/loader/loader.component';
 import { PlanetStore } from '../planets.store';
 import { RouterLink } from '@angular/router';
@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
   imports: [LoaderComponent, RouterLink],
   templateUrl: './planets-table.component.html',
   styleUrl: './planets-table.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanetsTableComponent {
   planetStore = inject(PlanetStore);

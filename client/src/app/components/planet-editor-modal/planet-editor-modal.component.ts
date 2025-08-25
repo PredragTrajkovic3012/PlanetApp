@@ -1,35 +1,64 @@
-import { Component, inject, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { PlanetStore } from '@pages/planets/planets.store';
 import { Planet } from '@shared/models/planet.model';
+import { ConfirmDialogService } from '@shared/services/confirm-dialog.service';
+import { MessageService } from '@shared/services/message.service';
+import { PlanetService } from '@shared/services/planet.service';
 @Component({
   selector: 'app-planet-editor-modal',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './planet-editor-modal.component.html',
   styleUrl: './planet-editor-modal.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanetEditorModalComponent implements OnInit {
   fb = inject(FormBuilder);
+  planetService = inject(PlanetService);
+  planetStore = inject(PlanetStore);
+  confirmDialogService = inject(ConfirmDialogService);
+  messageService = inject(MessageService);
   planetForm = this.fb.group({
     planetName: ['', [Validators.required, Validators.minLength(3)]],
     planetColor: ['', Validators.required],
-    planetRadiusKM: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-    distFromSun: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
-    distFromEarth: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+    planetRadiusKM: ['', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]],
+    distFromSun: ['', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]],
+    distFromEarth: ['', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]],
     description: ['', Validators.required],
-    image: [null as File | null, Validators.required],
+    image: [null as File | null],
   });
   imageError: string | null = null;
   previewUrl: string | ArrayBuffer | null = null;
+  isEditMode: boolean = false;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { planet: Planet },
     public readonly matDialogRef: MatDialogRef<PlanetEditorModalComponent>,
   ) {}
 
   ngOnInit(): void {
-    if (this.data?.planet) {
-      // this.planetForm.patchValue(this.data.planet);
+    this.isEditMode = !!this.data?.planet;
+
+    if (this.isEditMode) {
+      this.patchFormForEdit();
+    }
+  }
+
+  private patchFormForEdit(): void {
+    const planet = this.data!.planet;
+
+    this.planetForm.patchValue({
+      planetName: planet.planetName,
+      planetColor: planet.planetColor,
+      planetRadiusKM: planet.planetRadiusKM + '',
+      distFromSun: +planet.distInMillionsKM.fromSun + '',
+      distFromEarth: +planet.distInMillionsKM.fromEarth + '',
+      description: planet.description,
+    });
+
+    if (planet.imageUrl) {
+      this.previewUrl = planet.imageUrl;
     }
   }
   onFileSelect(event: Event) {
@@ -66,5 +95,50 @@ export class PlanetEditorModalComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  onSubmit() {}
+  onSubmit() {
+    
+    if (this.planetForm.invalid) {
+      this.planetForm.markAllAsTouched();
+      return;
+    }
+
+    const formData = new FormData();
+    const distance = {
+      fromSun: this.planetForm.value.distFromSun,
+      fromEarth: this.planetForm.value.distFromEarth,
+    };
+
+    formData.append('planetName', this.planetForm.value.planetName!);
+    formData.append('planetColor', this.planetForm.value.planetColor!);
+    formData.append('planetRadiusKM', this.planetForm.value.planetRadiusKM!);
+    formData.append('distInMillionsKM', JSON.stringify(distance));
+    formData.append('description', this.planetForm.value.description!);
+    if (this.planetForm.value.image) {
+      formData.append('file', this.planetForm.value.image);
+    }
+
+    const action = this.isEditMode ? 'Update' : 'Create';
+    const confirmText = this.isEditMode ? 'Update' : 'Create';
+
+    this.confirmDialogService
+      .openConfirmDialog({
+        title: `${action} Planet`,
+        message: `Are you sure you want to ${action.toLowerCase()} "${this.planetForm.value.planetName}"?`,
+        imageUrl: null,
+        confirmText,
+        cancelText: 'Cancel',
+      })
+      .afterClosed()
+      .subscribe(confirmed => {
+        if (!confirmed) return;
+
+        if (this.isEditMode) {
+          this.planetStore.updatePlanet({ id: this.data.planet.id, formData });
+          this.matDialogRef.close({});
+        } else {
+          this.planetStore.addPlanet(formData);
+          this.matDialogRef.close({});
+        }
+      });
+  }
 }
