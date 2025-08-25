@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PlanetStore } from '@pages/planets/planets.store';
 import { DisplayModeService } from '@shared/services/display-mode.service';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
-import { PlanetEditorModalComponent } from '../../../components/planet-editor-modal/planet-editor-modal.component';
+import { PlanetEditorModalComponent } from '../planet-editor-modal/planet-editor-modal.component';
 import { Router, RouterLink } from '@angular/router';
 import { PlanetService } from '@shared/services/planet.service';
 import { MessageService } from '@shared/services/message.service';
