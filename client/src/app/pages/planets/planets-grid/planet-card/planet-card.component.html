@@ -5,7 +5,7 @@
   @if (planet?.imageUrl) {
     <img [src]="planet?.imageUrl" alt="{{ planet?.planetName }}" class="w-[80px] h-[80px] object-cover rounded-full" />
   } @else {
-    <div class="w-[80px] h-[80px] rounded-full bg-purple"></div>
+    <div class="w-[80px] h-[80px] min-w-[80px] min-h-[80px] max-w-[80px] max-h-[80px] rounded-full bg-purple"></div>
   }
   <h1 class="font-inter font-semibold text-[36px] leading-[40px] tracking-[0] text-center">
     {{ planet?.planetName }}

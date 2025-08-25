@@ -32,6 +32,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private _subscriptions = new Subscription();
 
   ngOnInit() {
+    this.initSearch();
+  }
+  //Note: I am aware that we should probably also use API when searching
+  private initSearch(): void {
     this._subscriptions.add(
       this.searchControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe(value => {
         this.planetStore.setSearchTerm(value ?? '');

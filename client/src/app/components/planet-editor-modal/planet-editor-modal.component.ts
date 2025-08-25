@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PlanetStore } from '@pages/planets/planets.store';
@@ -6,15 +6,16 @@ import { Planet } from '@shared/models/planet.model';
 import { ConfirmDialogService } from '@shared/services/confirm-dialog.service';
 import { MessageService } from '@shared/services/message.service';
 import { PlanetService } from '@shared/services/planet.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-planet-editor-modal',
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './planet-editor-modal.component.html',
   styleUrl: './planet-editor-modal.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlanetEditorModalComponent implements OnInit {
+export class PlanetEditorModalComponent implements OnInit, OnDestroy {
+  private _subscriptions = new Subscription();
   fb = inject(FormBuilder);
   planetService = inject(PlanetService);
   planetStore = inject(PlanetStore);
@@ -94,33 +95,52 @@ export class PlanetEditorModalComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
   onSubmit() {
-    
     if (this.planetForm.invalid) {
       this.planetForm.markAllAsTouched();
       return;
     }
 
-    const formData = new FormData();
-    const distance = {
-      fromSun: this.planetForm.value.distFromSun,
-      fromEarth: this.planetForm.value.distFromEarth,
-    };
-
-    formData.append('planetName', this.planetForm.value.planetName!);
-    formData.append('planetColor', this.planetForm.value.planetColor!);
-    formData.append('planetRadiusKM', this.planetForm.value.planetRadiusKM!);
-    formData.append('distInMillionsKM', JSON.stringify(distance));
-    formData.append('description', this.planetForm.value.description!);
-    if (this.planetForm.value.image) {
-      formData.append('file', this.planetForm.value.image);
-    }
-
+    const formData = this.createFormData();
     const action = this.isEditMode ? 'Update' : 'Create';
-    const confirmText = this.isEditMode ? 'Update' : 'Create';
+    const confirmText = action;
 
-    this.confirmDialogService
+    this._subscriptions.add(
+      this.openConfirmDialog(action, confirmText).subscribe(confirmed => {
+        if (!confirmed) return;
+
+        if (this.isEditMode) {
+          this.planetStore.updatePlanet({ id: this.data.planet.id, formData });
+        } else {
+          this.planetStore.addPlanet(formData);
+        }
+
+        this.matDialogRef.close({});
+      }),
+    );
+  }
+
+  private createFormData(): FormData {
+    const formData = new FormData();
+    const { planetName, planetColor, planetRadiusKM, distFromSun, distFromEarth, description, image } =
+      this.planetForm.value;
+
+    formData.append('planetName', planetName!);
+    formData.append('planetColor', planetColor!);
+    formData.append('planetRadiusKM', planetRadiusKM!);
+    formData.append('distInMillionsKM', JSON.stringify({ fromSun: distFromSun, fromEarth: distFromEarth }));
+    formData.append('description', description!);
+
+    if (image) {
+      formData.append('file', image);
+    } else if (this.isEditMode && this.data.planet.imageUrl) {
+      formData.append('imageUrl', this.data.planet.imageUrl);
+    }
+    return formData;
+  }
+
+  private openConfirmDialog(action: string, confirmText: string) {
+    return this.confirmDialogService
       .openConfirmDialog({
         title: `${action} Planet`,
         message: `Are you sure you want to ${action.toLowerCase()} "${this.planetForm.value.planetName}"?`,
@@ -128,17 +148,9 @@ export class PlanetEditorModalComponent implements OnInit {
         confirmText,
         cancelText: 'Cancel',
       })
-      .afterClosed()
-      .subscribe(confirmed => {
-        if (!confirmed) return;
-
-        if (this.isEditMode) {
-          this.planetStore.updatePlanet({ id: this.data.planet.id, formData });
-          this.matDialogRef.close({});
-        } else {
-          this.planetStore.addPlanet(formData);
-          this.matDialogRef.close({});
-        }
-      });
+      .afterClosed();
+  }
+  ngOnDestroy(): void {
+    this._subscriptions.unsubscribe();
   }
 }
